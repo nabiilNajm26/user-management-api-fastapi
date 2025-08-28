@@ -1,76 +1,115 @@
 # User Management API
 
-Simple REST API for user management built with FastAPI and PostgreSQL.
+A simple user management REST API that I built to learn FastAPI. Handles basic CRUD operations for users with a PostgreSQL database.
+
+## Demo
+
+**Live version:** https://user-management-api-fastapi-production.up.railway.app
+
+Try it out:
+- https://user-management-api-fastapi-production.up.railway.app/docs (interactive API docs)
+- https://user-management-api-fastapi-production.up.railway.app/health
 
 ## What it does
 
-This API handles basic user operations - creating, reading, updating, and deleting user accounts. I built it to learn FastAPI fundamentals and practice building clean APIs.
+Basic user management - create, view, update, delete users. Has pagination, search, and some simple user stats. Nothing fancy, just a clean API to practice with.
 
-## Tech Stack
+## Stack
 
-- FastAPI for the web framework
-- PostgreSQL for data storage
-- SQLAlchemy as the ORM
-- Docker for containerization
-- Pydantic for data validation
+- FastAPI (Python web framework)
+- PostgreSQL (database)
+- SQLAlchemy (ORM)
+- Docker (for easy setup)
+- Railway (hosting)
 
-## Getting Started
+## Running locally
 
-### With Docker (recommended)
+**Quick start with Docker:**
 ```bash
-git clone <repo-url>
+git clone https://github.com/your-username/project-1-user-management-api.git
 cd project-1-user-management-api
 docker-compose up -d
 ```
 
-The API will be available at `http://localhost:8000` and docs at `http://localhost:8000/docs`.
+Then visit http://localhost:8000/docs
 
-### Local Development
+**Manual setup:**
 ```bash
-# Install dependencies
 pip install -r requirements.txt
 
-# Set up database (PostgreSQL required)
-cp .env.example .env
-# Edit .env with your database URL
+# You'll need PostgreSQL running
+# Default connection: postgresql://postgres:postgres123@localhost:5432/user_management
 
-# Run the application
 uvicorn app.main:app --reload
 ```
 
-## API Endpoints
+## API endpoints
 
-- `POST /users` - Create a new user
-- `GET /users` - List all users (with pagination)
-- `GET /users/{user_id}` - Get a specific user
-- `PUT /users/{user_id}` - Update a user
-- `DELETE /users/{user_id}` - Delete a user
-- `GET /health` - Health check
+| Method | Path | What it does |
+|--------|------|--------------|
+| GET | / | Basic info |
+| GET | /health | Health check + DB status |
+| POST | /users/ | Create user |
+| GET | /users/ | List users (with pagination/search) |
+| GET | /users/{id} | Get specific user |
+| PUT | /users/{id} | Update user |
+| DELETE | /users/{id} | Delete user |
+| GET | /users/stats/summary | User count stats |
 
-## Project Structure
+## Examples
+
+```bash
+# Create a user
+curl -X POST "http://localhost:8000/users/" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "name": "Test User"}'
+
+# Get all users
+curl "http://localhost:8000/users/"
+
+# Search users
+curl "http://localhost:8000/users/?search=test&page=1"
+```
+
+## Project structure
 
 ```
 app/
-├── main.py          # FastAPI application
-├── models/          # Database models
-├── schemas/         # Pydantic schemas
-├── api/            # API endpoints
-├── core/           # Database and config
-└── services/       # Business logic
+├── main.py          # Main FastAPI app
+├── api/             # Route handlers
+├── models/          # Database models  
+├── schemas/         # Pydantic models
+├── services/        # Business logic
+└── core/            # Database + config
 ```
 
-## What I learned
+## Environment variables
 
-- FastAPI basics and automatic API documentation
-- SQLAlchemy ORM patterns
-- Database migrations with Alembic
-- Docker containerization
-- API design principles
+For local development, the app uses these defaults:
+```
+DATABASE_URL=postgresql://postgres:postgres123@localhost:5432/user_management
+```
 
-## Future improvements
+Railway automatically provides `DATABASE_URL` and `PORT` for deployment.
 
-- Add authentication
-- Implement file uploads
-- Add email notifications
-- Better error handling
-- API rate limiting
+## What I learned building this
+
+- FastAPI is really nice for building APIs quickly
+- Docker makes local development much easier
+- Railway deployment is pretty straightforward
+- SQLAlchemy relationships and pagination
+- Proper API structure with separate layers
+
+## Things I might add later
+
+- User authentication (JWT probably)
+- File uploads for profile pictures
+- Email verification
+- More detailed user profiles
+- Maybe a simple frontend
+
+## Notes
+
+This is a learning project, so the code might not be production-perfect. Feel free to suggest improvements or point out issues!
+
+The database starts empty, so you'll need to create some users first to see anything interesting.
