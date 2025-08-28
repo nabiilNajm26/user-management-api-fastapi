@@ -26,8 +26,13 @@ app.include_router(users_router)
 
 @app.on_event("startup")
 async def startup_event():
-    """Create database tables on startup"""
-    create_tables()
+    """Create database tables on startup (with error handling)"""
+    try:
+        create_tables()
+        print("✅ Database tables created successfully")
+    except Exception as e:
+        print(f"⚠️ Database connection failed: {e}")
+        print("App will start but database operations will fail until DB is available")
 
 @app.get("/")
 def read_root():
@@ -44,10 +49,21 @@ def read_root():
 
 @app.get("/health")
 def health_check():
+    from .core.database import engine
+    
+    # Check database connectivity
+    db_status = "disconnected"
+    try:
+        with engine.connect() as connection:
+            db_status = "connected"
+    except Exception:
+        db_status = "disconnected"
+    
     return {
         "status": "healthy",
         "service": "user-management-api",
-        "version": settings.app_version
+        "version": settings.app_version,
+        "database": db_status
     }
 
 if __name__ == "__main__":
