@@ -64,3 +64,6 @@ Thumbs.db
 # Documentation (exclude README.md)
 *.md
 !README.md
+
+# Learning materials (personal notes)
+learning/
