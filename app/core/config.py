@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     environment: str = "development"
     debug: bool = True
     
-    # Database settings
-    database_url: str = "postgresql://postgres:postgres123@localhost:5432/user_management"
+    # Database settings - Railway provides DATABASE_URL automatically
+    database_url: str = os.getenv("DATABASE_URL", "postgresql://postgres:postgres123@localhost:5432/user_management")
     
     # API settings
     default_page_size: int = 20
