@@ -67,8 +67,5 @@ def health_check():
         "database": db_status
     }
 
-if __name__ == "__main__":
-    import uvicorn
-    # Railway provides PORT env var, fallback to 8000 for local
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+# Remove programmatic uvicorn run - let Procfile handle it
+# This ensures Railway's PORT environment variable is used correctly
