@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI(
     title="User Management API",
@@ -31,3 +32,9 @@ def health_check():
         "service": "user-management-api",
         "version": "1.0.0"
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    # Use Railway's port (8080) or fallback to 8000 for local
+    port = int(os.getenv("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)
